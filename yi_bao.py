@@ -77,13 +77,10 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 
 def get_links(local_driver):
     links = {}
-    elements = local_driver.find_elements(By.XPATH, "//a[contains(@class, 'ellipsis2')]")
+    elements = local_driver.find_elements(By.XPATH, "//a[@class='et-accent-color']")
     for element in elements:
         text = element.text
         href = element.get_attribute('href')
-        # if "贺卫方" in text:
-        #     links[text] = href
-        #     print(text)
         links[text] = href
         print(text)
     return links
@@ -100,28 +97,30 @@ def click_load_more(local_driver):
     except:
         return False
 
-url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E5%BC%A0%E5%8D%83%E5%B8%86'
-url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E8%B4%BA%E5%8D%AB%E6%96%B9&x=0&y=0'
-
-local_driver.get(url)
-print('开始等待10秒')
-time.sleep(10)
+base_url = 'https://yibaochina.com/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
 
 all_links = {}
 
-run_num = 0 
-while True:
-    run_num = run_num + 1  
-    if run_num >= 5 :
-        break
+for page in range(1, 14):  # 从1到13页
+    url = f"{base_url}&paged={page}"
+    local_driver.get(url)
+    print(f'正在处理第 {page} 页')
+    
+    # 等待页面加载完成
+    try:
+        WebDriverWait(local_driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//a[@class='et-accent-color']"))
+        )
+    except:
+        print(f"第 {page} 页加载超时或没有找到元素")
+        continue
 
     new_links = get_links(local_driver)
     all_links.update(new_links)
-    
-    if not click_load_more(local_driver):
-        break
-    
-    time.sleep(5)
+
+    time.sleep(2)  # 在每页之间添加短暂延迟，避免请求过于频繁
+
+print(f"总共找到 {len(all_links)} 个链接")
 
 print("找到的所有链接:")
 for text, href in all_links.items():
@@ -160,30 +159,12 @@ for link_text, link_href in links_dict.items():
         # 第六步：取 class="show_text" 的所有文字内容 保存到txt
         try:
            # 获取 id 为 'content' 的元素
-            content_elements = local_driver.find_elements(By.ID, 'content') 
+            content_elements = local_driver.find_elements(By.ID, 'content-area') 
             content_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in content_elements])
-
-
-            # 获取 class 为 'blog-content' 的元素
-            blog_content_elements = local_driver.find_elements(By.CLASS_NAME, 'blog-content')
-            blog_content_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in blog_content_elements]) 
-
-            # 获取 id 为 'the_content' 的元素
-            the_content_elements = local_driver.find_elements(By.ID, 'the_content')
-            the_content_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in the_content_elements])  
-
-            # 如果 blog_content_elements 没有内容，获取 class 为 'blog-top-title' 和 'content' 的元素
-            if not blog_content_text:
-                blog_top_title_elements = local_driver.find_elements(By.CLASS_NAME, 'blog-top-title')
-                blog_top_title_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in blog_top_title_elements])  
-                
-                content_class_elements = local_driver.find_elements(By.CLASS_NAME, 'content')
-                content_class_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in content_class_elements]) 
-                
-                blog_content_text = f"\n{blog_top_title_text}\n\ \n{content_class_text}"
+ 
 
             # 合并所有内容
-            combined_content = f"# {valid_filename}  \n{content_text}\n\n\n{blog_content_text}\n\n\n{the_content_text}"
+            combined_content = f"# {valid_filename}  \n{content_text}"
 
             print(f'Combined content:\n{combined_content}')
 

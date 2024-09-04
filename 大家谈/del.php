@@ -8,7 +8,7 @@ foreach ($files as $file) {
     $content = file_get_contents($file);
 
     // 检查文件内容是否包含 '张千帆'
-    if (strpos($content, '资中筠') === false) {
+    if (strpos($content, '贺卫方') === false) {
         // 如果不包含，删除文件
         if (unlink($file)) {
             echo "已删除文件: $file\n";
@@ -21,3 +21,8 @@ foreach ($files as $file) {
 }
 
 echo "处理完成\n";
+
+
+
+
+

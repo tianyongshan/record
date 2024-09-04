@@ -74,7 +74,7 @@ options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options) 
 
 # 第一步：浏览器打开该地址
-url = 'https://www.china-week.com/author/shihanbing.htm'
+url = 'https://www.china-week.com/author/shenzhihua.htm'
 local_driver.get(url)
 
 time.sleep(10) 
@@ -134,7 +134,7 @@ for link_text, link_href in links_dict.items():
         # 第六步：取 class="show_text" 的所有文字内容 保存到txt
         try:
             show_text_elements = local_driver.find_elements(By.ID, 'primary')
-            show_text_content = "\n".join([element.text for element in show_text_elements])
+            show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements])
             # 创建 Markdown 内容，将 valid_filename 作为标题
             md_content = f"# {valid_filename}\n\n{show_text_content}"
 
@@ -145,6 +145,7 @@ for link_text, link_href in links_dict.items():
 
         except Exception as e:
             print(f"处理链接 {link_href} 出现错误：{e}")
+
 
     else:
         print(f"警告：无效的文件名，链接文案：{link_text}")

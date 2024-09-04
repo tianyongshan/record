@@ -102,7 +102,7 @@ def click_load_more(local_driver):
 
 
 url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E5%BC%A0%E5%8D%83%E5%B8%86'
-url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E8%B5%84%E4%B8%AD%E7%AD%A0&x=14&y=11'
+url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E8%B4%BA%E5%8D%AB%E6%96%B9&x=0&y=0'
 local_driver.get(url)
 print('等待10秒')
 time.sleep(10)

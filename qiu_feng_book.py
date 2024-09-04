@@ -74,7 +74,7 @@ options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options) 
 
 # 第一步：浏览器打开该地址
-url = 'https://www.qiufengshuwu.com/2/2739/'
+url = 'https://www.qiufengshuwu.com/1/1089/'
 local_driver.get(url)
 
 time.sleep(10) 
@@ -107,8 +107,8 @@ for link in links:
 with open('links.json', 'w', encoding='utf-8') as f:
     json.dump(links_dict, f, ensure_ascii=False, indent=4)
 
-# 确保 简读中国史 文件夹存在
-os.makedirs('简读中国史', exist_ok=True)
+# 确保 饥饿游戏 文件夹存在
+os.makedirs('饥饿游戏', exist_ok=True)
 
 # 第四步：循环所有保存的链接
 for link_text, link_href in links_dict.items():
@@ -117,7 +117,7 @@ for link_text, link_href in links_dict.items():
     valid_filename = valid_filename.strip()
 
     if valid_filename:
-        txt_file_path = f"简读中国史/{valid_filename}.md"
+        txt_file_path = f"饥饿游戏/{valid_filename}.md"
         
         # 检查文件是否已存在且不为空
         if file_exists_and_non_empty(txt_file_path):

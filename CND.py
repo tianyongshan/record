@@ -47,7 +47,9 @@ import time
 from selenium.webdriver.chrome.service import Service 
 from dateutil.relativedelta import relativedelta  
 from selenium.webdriver.common.keys import Keys    
-import re 
+import re
+
+
 
 def file_exists_and_non_empty(filepath):
     return os.path.exists(filepath) and os.path.getsize(filepath) > 0
@@ -60,7 +62,8 @@ def scroll_down(driver, scrolls):
         time.sleep(1)  # 每次滚动后等待一秒
 
 
-################################# [浏览器 准备工作 S]  ########################################  
+################################# [浏览器 准备工作 S]  ######################################## 
+
 
 
 chrome_driver_path = r'C:\Users\12703\Desktop\chrome-win64\chrome-win64\chromedriver-win64\chromedriver.exe'
@@ -71,47 +74,38 @@ options = Options()
 options.binary_location = chrome_binary_path
 options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options)
- 
+
+
 # 第一步：浏览器打开该地址
-url = 'https://www.99csw.com/book/1080/index.htm'
+url = 'http://hx.cnd.org/?s=%E5%BC%A0%E5%8D%83%E5%B8%86'
 local_driver.get(url)
 
 time.sleep(10) 
 
 
+# 第一步：找到所有的 a 链接
+links = local_driver.find_elements(By.XPATH, "//a")
 
-moreEle = local_driver.find_elements(By.ID, 'more_dir')
-if len(moreEle):
-    moreEle = local_driver.find_element(By.ID, 'more_dir')
-    moreEle.click()
-
-
-
-# 第二步：找到所有以下规律的链接
-links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
-while True:
-    if len(links)>0:
-        break
-    links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
-    print('循环等待中')    
-    time.sleep(5)
-
-
-
-# 第三步：把所有链接保存到数组里
+# 第二步：把所有包含 "张千帆" 的链接保存到字典里
 links_dict = {}
 for link in links:
     link_text = link.text
     link_href = link.get_attribute('href')
+
+    # 检查链接文字是否包含 "张千帆"
+    # if "张千帆" in link_text:
+    #     print(f"文字内容是啥：{link_text}  链接是啥：{link_href}")
+    #     links_dict[link_text] = link_href
     print(f"文字内容是啥：{link_text}  链接是啥：{link_href}")
     links_dict[link_text] = link_href
+
 
 # 保存为JSON文件，方便后续使用
 with open('links.json', 'w', encoding='utf-8') as f:
     json.dump(links_dict, f, ensure_ascii=False, indent=4)
 
-# 确保 秦晖文集 文件夹存在
-os.makedirs('秦晖文集', exist_ok=True)
+# 确保 大家谈 文件夹存在
+os.makedirs('大家谈', exist_ok=True)
 
 # 第四步：循环所有保存的链接
 for link_text, link_href in links_dict.items():
@@ -120,7 +114,7 @@ for link_text, link_href in links_dict.items():
     valid_filename = valid_filename.strip()
 
     if valid_filename:
-        txt_file_path = f"秦晖文集/{valid_filename}.md"
+        txt_file_path = f"大家谈/{valid_filename}.md"
         
         # 检查文件是否已存在且不为空
         if file_exists_and_non_empty(txt_file_path):
@@ -129,24 +123,17 @@ for link_text, link_href in links_dict.items():
 
         # 第五步：打开链接 然后sleep 8秒
         local_driver.get(link_href)
-        time.sleep(6)
+        time.sleep(8)
 
-        #  if  this is a Log:  this  needs to  Log  
-        #  Mysql needs  change to Insert  
-
-        # 向下滚动  
+        # 向下滚动 
         scroll_down(local_driver, 5)
 
 
         # 第六步：取 class="show_text" 的所有文字内容 保存到txt
         try:
-            # show_text_elements = local_driver.find_elements(By.ID, 'content')
-            # show_text_content = "\n".join([element.text for element in show_text_elements])
-            # print(f'show_text_content: {show_text_content}')
-
             show_text_elements = local_driver.find_elements(By.ID, 'content')
-            show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements])
-            # 创建 Markdown 内容，将 valid_filename 作为标题
+            show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements]) 
+            # print(f'show_text_content: {show_text_content}')
             md_content = f"# {valid_filename}\n\n{show_text_content}"
             print(f'show_text_content: {md_content}')
 

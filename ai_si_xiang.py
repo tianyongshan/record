@@ -73,28 +73,28 @@ options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options)
  
 # 第一步：浏览器打开该地址
-url = 'https://www.99csw.com/book/1080/index.htm'
+url = 'https://www.aisixiang.com/thinktank/wangxuetai.html'
 local_driver.get(url)
 
-time.sleep(10) 
+time.sleep(10)  
 
 
-
-moreEle = local_driver.find_elements(By.ID, 'more_dir')
-if len(moreEle):
-    moreEle = local_driver.find_element(By.ID, 'more_dir')
-    moreEle.click()
+# moreEle = local_driver.find_elements(By.ID, 'more_dir')
+# if len(moreEle):
+#     moreEle = local_driver.find_element(By.ID, 'more_dir')
+#     moreEle.click()
 
 
 
 # 第二步：找到所有以下规律的链接
-links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
+links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/data/') and substring(@href, string-length(@href) - 4) = '.html']")
 while True:
-    if len(links)>0:
+    if len(links) > 0:
         break
-    links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
+    links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/data/') and substring(@href, string-length(@href) - 4) = '.html']")
     print('循环等待中')    
     time.sleep(5)
+
 
 
 
@@ -110,8 +110,8 @@ for link in links:
 with open('links.json', 'w', encoding='utf-8') as f:
     json.dump(links_dict, f, ensure_ascii=False, indent=4)
 
-# 确保 秦晖文集 文件夹存在
-os.makedirs('秦晖文集', exist_ok=True)
+# 确保 大家谈 文件夹存在
+os.makedirs('大家谈', exist_ok=True)
 
 # 第四步：循环所有保存的链接
 for link_text, link_href in links_dict.items():
@@ -120,7 +120,7 @@ for link_text, link_href in links_dict.items():
     valid_filename = valid_filename.strip()
 
     if valid_filename:
-        txt_file_path = f"秦晖文集/{valid_filename}.md"
+        txt_file_path = f"大家谈/{valid_filename}.md"
         
         # 检查文件是否已存在且不为空
         if file_exists_and_non_empty(txt_file_path):
@@ -144,7 +144,8 @@ for link_text, link_href in links_dict.items():
             # show_text_content = "\n".join([element.text for element in show_text_elements])
             # print(f'show_text_content: {show_text_content}')
 
-            show_text_elements = local_driver.find_elements(By.ID, 'content')
+            show_text_elements = local_driver.find_elements(By.CLASS_NAME, 'show_text')
+
             show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements])
             # 创建 Markdown 内容，将 valid_filename 作为标题
             md_content = f"# {valid_filename}\n\n{show_text_content}"

@@ -1,5 +1,10 @@
 <?php
 
+/**
+
+ format md file
+
+ */
 function processMarkdownFiles($directory) {
     $files = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
@@ -20,3 +25,6 @@ $currentDirectory = __DIR__;
 processMarkdownFiles($currentDirectory);
 
 echo "All Markdown files have been processed.";
+
+
+

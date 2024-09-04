@@ -48,7 +48,6 @@ from selenium.webdriver.chrome.service import Service
 from dateutil.relativedelta import relativedelta  
 from selenium.webdriver.common.keys import Keys    
 import re 
- 
 
 def file_exists_and_non_empty(filepath):
     return os.path.exists(filepath) and os.path.getsize(filepath) > 0
@@ -71,28 +70,27 @@ chrome_binary_path = r'C:\Users\12703\Desktop\chrome-win64\chrome-win64\chrome.e
 options = Options()
 options.binary_location = chrome_binary_path
 options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
-local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options) 
-
+local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options)
+ 
 # 第一步：浏览器打开该地址
-url = 'https://www.qiufengshuwu.com/0/281/'
+url = 'https://www.99csw.com/book/4245/index.htm'
 local_driver.get(url)
 
 time.sleep(10) 
 
 
-# 第二步：找到所有符合新规律的链接
-links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, 'https://www.qiufengshuwu.com') and substring(@href, string-length(@href) - 4) = '.html']")
-
+# 第二步：找到所有以下规律的链接
+links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
 while True:
-    if len(links) > 0:
+    if len(links)>0:
         break
-    links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, 'https://www.qiufengshuwu.com') and substring(@href, string-length(@href) - 4) = '.html']")
-
+    links = local_driver.find_elements(By.XPATH, "//a[starts-with(@href, '/book/') and substring(@href, string-length(@href) - 3) = '.htm']")
     print('循环等待中')    
     time.sleep(5)
 
-# 向下滚动  
-scroll_down(local_driver, 2)
+moreEle = local_driver.find_element(By.ID, 'more_dir')
+if links:
+    moreEle.click()
 
 
 # 第三步：把所有链接保存到数组里
@@ -107,8 +105,8 @@ for link in links:
 with open('links.json', 'w', encoding='utf-8') as f:
     json.dump(links_dict, f, ensure_ascii=False, indent=4)
 
-# 确保 历史是个什么玩意 文件夹存在
-os.makedirs('历史是个什么玩意', exist_ok=True)
+# 确保 全世界人民都知道 文件夹存在
+os.makedirs('全世界人民都知道', exist_ok=True)
 
 # 第四步：循环所有保存的链接
 for link_text, link_href in links_dict.items():
@@ -117,7 +115,7 @@ for link_text, link_href in links_dict.items():
     valid_filename = valid_filename.strip()
 
     if valid_filename:
-        txt_file_path = f"历史是个什么玩意/{valid_filename}.md"
+        txt_file_path = f"全世界人民都知道/{valid_filename}.md"
         
         # 检查文件是否已存在且不为空
         if file_exists_and_non_empty(txt_file_path):
@@ -128,17 +126,23 @@ for link_text, link_href in links_dict.items():
         local_driver.get(link_href)
         time.sleep(6)
 
-        # 向下滚动 
-        scroll_down(local_driver, 2)
+        #  if  this is a Log:  this  needs to  Log  
+        #  Mysql needs  change to Insert  
+
+        # 向下滚动  
+        scroll_down(local_driver, 5)
 
 
         # 第六步：取 class="show_text" 的所有文字内容 保存到txt
         try:
-            show_text_elements = local_driver.find_elements(By.ID, 'novelbody')
+            # show_text_elements = local_driver.find_elements(By.ID, 'content')
+            # show_text_content = "\n".join([element.text for element in show_text_elements])
+            # print(f'show_text_content: {show_text_content}')
+
+            show_text_elements = local_driver.find_elements(By.ID, 'content')
             show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements])
             # 创建 Markdown 内容，将 valid_filename 作为标题
             md_content = f"# {valid_filename}\n\n{show_text_content}"
-
             print(f'show_text_content: {md_content}')
 
             with open(txt_file_path, 'w', encoding='utf-8') as txt_file:
@@ -146,7 +150,6 @@ for link_text, link_href in links_dict.items():
 
         except Exception as e:
             print(f"处理链接 {link_href} 出现错误：{e}")
-
 
     else:
         print(f"警告：无效的文件名，链接文案：{link_text}")

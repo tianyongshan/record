@@ -147,6 +147,9 @@ for link_text, link_href in links_dict.items():
             show_text_elements = local_driver.find_elements(By.CLASS_NAME, 'show_text')
 
             show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements])
+            
+            show_text_content = show_text_content.replace(';', '.').replace('；', '.')
+
             # 创建 Markdown 内容，将 valid_filename 作为标题
             md_content = f"# {valid_filename}\n\n{show_text_content}"
             print(f'show_text_content: {md_content}')

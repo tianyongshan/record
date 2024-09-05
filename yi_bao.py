@@ -99,12 +99,12 @@ def click_load_more(local_driver):
 
 #https://yibaochina.com/?s=%E8%B5%84%E4%B8%AD%E7%AD%A0&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes
 base_url = 'https://yibaochina.com/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
-base_url = 'https://yibaochina.com/?s=%E7%A7%A6%E6%99%96&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
+base_url = 'https://yibaochina.com/?s=%E9%92%B1%E7%90%86%E7%BE%A4&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
 
 all_links = {}
 
 # for page in range(1, 14):  # 从1到13页
-for page in range(1, 12):   
+for page in range(1, 2):   
     url = f"{base_url}&paged={page}"
     local_driver.get(url)
     print(f'正在处理第 {page} 页')
@@ -167,6 +167,8 @@ for link_text, link_href in links_dict.items():
 
             # 合并所有内容
             combined_content = f"# {valid_filename}  \n{content_text}"
+
+            combined_content = combined_content.replace(';', '.').replace('；', '.')
 
             print(f'Combined content:\n{combined_content}')
 

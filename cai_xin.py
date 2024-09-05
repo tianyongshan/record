@@ -185,6 +185,8 @@ for link_text, link_href in links_dict.items():
             # 合并所有内容
             combined_content = f"# {valid_filename}  \n{content_text}\n\n\n{blog_content_text}\n\n\n{the_content_text}"
 
+            combined_content = combined_content.replace(';', '.').replace('；', '.')
+
             print(f'Combined content:\n{combined_content}')
 
             # 保存到文件

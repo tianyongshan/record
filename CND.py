@@ -135,6 +135,9 @@ for link_text, link_href in links_dict.items():
             show_text_content = "\n\n".join([element.text.replace('\n', '\n\n') for element in show_text_elements]) 
             # print(f'show_text_content: {show_text_content}')
             md_content = f"# {valid_filename}\n\n{show_text_content}"
+            
+            md_content = md_content.replace(';', '.').replace('；', '.')
+            
             print(f'show_text_content: {md_content}')
 
             with open(txt_file_path, 'w', encoding='utf-8') as txt_file:

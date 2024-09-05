@@ -139,6 +139,8 @@ for link_text, link_href in links_dict.items():
             # 创建 Markdown 内容，将 valid_filename 作为标题
             md_content = f"# {valid_filename}\n\n{show_text_content}"
 
+            md_content = md_content.replace(';', '.').replace('；', '.')
+            
             print(f'show_text_content: {md_content}')
 
             with open(txt_file_path, 'w', encoding='utf-8') as txt_file:

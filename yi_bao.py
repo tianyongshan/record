@@ -97,11 +97,14 @@ def click_load_more(local_driver):
     except:
         return False
 
+#https://yibaochina.com/?s=%E8%B5%84%E4%B8%AD%E7%AD%A0&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes
 base_url = 'https://yibaochina.com/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
+base_url = 'https://yibaochina.com/?s=%E7%A7%A6%E6%99%96&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
 
 all_links = {}
 
-for page in range(1, 14):  # 从1到13页
+# for page in range(1, 14):  # 从1到13页
+for page in range(1, 12):   
     url = f"{base_url}&paged={page}"
     local_driver.get(url)
     print(f'正在处理第 {page} 页')
@@ -161,7 +164,6 @@ for link_text, link_href in links_dict.items():
            # 获取 id 为 'content' 的元素
             content_elements = local_driver.find_elements(By.ID, 'content-area') 
             content_text = "\n\n".join([element.text.replace('\n', '\n\n') for element in content_elements])
- 
 
             # 合并所有内容
             combined_content = f"# {valid_filename}  \n{content_text}"
@@ -171,7 +173,6 @@ for link_text, link_href in links_dict.items():
             # 保存到文件
             with open(txt_file_path, 'w', encoding='utf-8') as txt_file:
                 txt_file.write(combined_content)
-
 
         except Exception as e:
             print(f"处理链接 {link_href} 出现错误：{e}")

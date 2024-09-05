@@ -70,7 +70,7 @@ _________________
     
 ```javascript    
 	// An highlighted block    
-	var foo = 'bar';    
+	var foo = 'bar'.    
 ```    
     
     

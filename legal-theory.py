@@ -76,8 +76,8 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 
 def get_links(local_driver):
     links = {}
-    # 匹配新的链接结构，title包含“徐贲”的链接
-    elements = local_driver.find_elements(By.XPATH, "//a[contains(@href, '?mod=info&act=view&') and contains(@title, '徐贲')]")
+    # 匹配新的链接结构，title包含“林达”的链接
+    elements = local_driver.find_elements(By.XPATH, "//a[contains(@href, '?mod=info&act=view&') and contains(@title, '林达')]")
     for element in elements:
         text = element.text
         href = element.get_attribute('href')  # 获取完整的 href 链接
@@ -98,7 +98,7 @@ def click_load_more(local_driver):
     except:
         return False
 
-base_url = 'https://www.legal-theory.org/?mod=info&act=search&kw=%E5%BE%90%E8%B4%B2'
+base_url = 'https://www.legal-theory.org/?mod=info&act=search&kw=%E6%9E%97%E8%BE%BE'
 
 all_links = {}
 
@@ -112,7 +112,7 @@ for page in range(1, 3):
     # 等待页面加载完成
     try:
         WebDriverWait(local_driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '徐贲')]"))
+            EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '林达')]"))
         )
     except:
         print(f"第 {page} 页加载超时或没有找到元素")

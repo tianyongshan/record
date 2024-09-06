@@ -74,7 +74,7 @@ options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options) 
 
 # 第一步：浏览器打开该地址
-url = 'https://book.vik.im/index.php?id=141706888666&display=menu'
+url = 'https://book.vik.im/index.php?id=952314566236&display=menu'
 local_driver.get(url)
 
 time.sleep(10) 
@@ -127,10 +127,17 @@ for link_text, link_href in links_dict.items():
 
         # 第六步：取 class="show_text" 的所有文字内容 保存到txt
         try:
-            title = local_driver.find_element(By.CLASS_NAME, 'calibre1').text
+            if local_driver.find_elements(By.CLASS_NAME, 'calibre1'):
+                title = local_driver.find_element(By.CLASS_NAME, 'calibre1').text
+            elif local_driver.find_elements(By.CLASS_NAME, 'calibre_'):
+                title = local_driver.find_element(By.CLASS_NAME, 'calibre_').text
+            elif local_driver.find_elements(By.CLASS_NAME, 'calibre5'):
+                title = local_driver.find_element(By.CLASS_NAME, 'calibre5').text    
+            else:
+                title = valid_filename
 
             txt_file_path = f"大家谈/{title}.md"
-        
+
             # 检查文件是否已存在且不为空
             if file_exists_and_non_empty(txt_file_path):
                 print(f"文件 {txt_file_path} 已存在且不为空，跳过链接：{link_href}")
@@ -159,3 +166,4 @@ for link_text, link_href in links_dict.items():
 
 # 关闭WebDriver
 local_driver.quit()
+

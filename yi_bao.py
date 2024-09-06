@@ -99,12 +99,12 @@ def click_load_more(local_driver):
 
 #https://yibaochina.com/?s=%E8%B5%84%E4%B8%AD%E7%AD%A0&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes
 base_url = 'https://yibaochina.com/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
-base_url = 'https://yibaochina.com/?s=%E9%92%B1%E7%90%86%E7%BE%A4&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
+base_url = 'https://yibaochina.com/?s=%E6%9D%8E%E6%89%BF%E9%B9%8F&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
 
 all_links = {}
 
 # for page in range(1, 14):  # 从1到13页
-for page in range(1, 2):   
+for page in range(1, 6):   
     url = f"{base_url}&paged={page}"
     local_driver.get(url)
     print(f'正在处理第 {page} 页')

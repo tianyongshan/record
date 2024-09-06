@@ -101,7 +101,7 @@ def click_load_more(local_driver):
         return False
 
 url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E5%BC%A0%E5%8D%83%E5%B8%86'
-url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E8%B4%BA%E5%8D%AB%E6%96%B9&x=0&y=0'
+url = 'https://search.caixin.com/newsearch/caixinsearch?keyword=%E9%92%B1%E7%90%86%E7%BE%A4&x=0&y=0'
 
 local_driver.get(url)
 print('开始等待10秒')
@@ -112,7 +112,7 @@ all_links = {}
 run_num = 0 
 while True:
     run_num = run_num + 1  
-    if run_num >= 5 :
+    if run_num >= 3 :
         break
 
     new_links = get_links(local_driver)
@@ -152,6 +152,20 @@ for link_text, link_href in links_dict.items():
         # 第五步：打开链接 然后sleep 8秒
         local_driver.get(link_href)
         time.sleep(8)
+
+        # 检查是否出现了包含“余下全文”文本的元素并点击
+        try:
+            # 等待指定时间内查找链接
+            more_text_link = WebDriverWait(local_driver, 2).until(
+                EC.presence_of_element_located((By.LINK_TEXT, '余下全文'))
+            )
+
+            # 如果链接被找到，则进行点击
+            if more_text_link.is_displayed() and more_text_link.is_enabled():
+                more_text_link.click()
+                time.sleep(6)  # 点击后等待页面加载完成
+        except Exception as e:
+            print("元素未找到或未点击:", e)
 
         # 向下滚动10次
         scroll_down(local_driver, 5)

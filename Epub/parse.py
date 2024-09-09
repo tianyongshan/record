@@ -49,7 +49,7 @@ def parse_epub(file_path, output_dir):
                     sanitized_title = sanitize_text(merged_title)
                     
                     # 限制标题长度，截取部分内容
-                    max_length = 100  # 设置最大长度
+                    max_length = 30  # 设置最大长度
                     if len(sanitized_title) > max_length:
                         sanitized_title = sanitized_title[:max_length] + '...'  # 添加省略号
                     
@@ -62,11 +62,12 @@ def parse_epub(file_path, output_dir):
 
                     # 优化内容（替换 ; 和 ； 为 .）
                     optimized_content = optimize_content(content)
-                    
-                    # 写入文件
+
+                    # 写入文件，同时保留换行
                     with open(md_file_path, 'w', encoding='utf-8') as md_file:
                         md_file.write(f"# {sanitized_title}\n\n")  # 写入标题
-                        md_file.write(optimized_content)  # 写入文章内容
+                        # 将内容中多余的换行符和连续空行处理为 Markdown 的换行
+                        md_file.write(optimized_content.replace('\n', '\n\n'))  # 保留换行
                         
                     print(f"章节 '{sanitized_title}' 内容已写入文件: {md_file_path}\n")
                     print(f"章节内容:\n{optimized_content}\n")

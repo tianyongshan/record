@@ -73,8 +73,19 @@ def parse_epub(file_path, output_dir):
                     print(f"章节内容:\n{optimized_content}\n")
                     print("=" * 80)  # 分隔符
 
-# 示例使用
-epub_file_path = '《王小波作品大全集（套装15册）》.epub'   
-output_directory = 'output_md_files'  # 指定输出目录
-os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
-parse_epub(epub_file_path, output_directory)
+def find_epub_file():
+    # 查找当前目录下第一个 EPUB 文件
+    for file in os.listdir('.'):
+        if file.endswith('.epub'):
+            return file
+    return None
+
+# 自定寻找 EPUB 文件
+epub_file_path = find_epub_file()
+if epub_file_path is None:
+    print("在当前文件夹中未找到任何 EPUB 文件。")
+else:
+    print(f"找到 EPUB 文件: {epub_file_path}")
+    output_directory = 'output_md_files'  # 指定输出目录
+    os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
+    parse_epub(epub_file_path, output_directory)

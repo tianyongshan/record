@@ -6,7 +6,7 @@ UNIVERSITY PRESS
 
 Oxford University Press is a department of the University of Oxford.
 
-广告：个人专属 VPN，独立 IP，无限流量，多机房切换，还可以屏蔽广告和恶意软件，每月最低仅 5 美元
+广告.个人专属 VPN,独立 IP,无限流量,多机房切换,还可以屏蔽广告和恶意软件,每月最低仅 5 美元
 
 It furthers the University's objective of excellence in research, scholarship, and education by publishing worldwide. Oxford is a registered trade mark ofOxford University Press in the UK and in certain other countries
 
@@ -30,8 +30,8 @@ I
 
 黃駿編輯整理
 
-版權所有，本書任何部份若未經版權持有人允許，不得用任何方式抄襲或翻印
+版權所有,本書任何部份若未經版權持有人允許,不得用任何方式抄襲或翻印
 
 歷史筆記I
 
-本書出版蒙利希慎基金支持，謹此致謝
+本書出版蒙利希慎基金支持,謹此致謝

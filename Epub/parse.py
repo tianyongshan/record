@@ -9,10 +9,10 @@ def sanitize_text(text):
     text = re.sub(r'\s+', '_', text)  # 替换多个空白字符为下划线
     return text.strip('_')  # 去掉开头和结尾的下划线
 
-def get_second_line(content):
-    # 获取文本的第二行
+def get_line(content, line_number):
+    # 获取指定行内容，line_number 从0开始
     lines = content.splitlines()
-    return lines[1] if len(lines) > 1 else ""  # 如果有第二行则返回，否则返回空字符串
+    return lines[line_number] if len(lines) > line_number else ""  # 返回指定行
 
 def optimize_content(content):
     # 替换 ; 和 ； 为 .
@@ -35,29 +35,29 @@ def parse_epub(file_path, output_dir):
                     # 读取并解析 HTML 内容
                     soup = BeautifulSoup(file.read(), 'lxml')
 
-                    # 获取章节标题（如果需要的话）
-                    title = soup.find(['h1', 'h2', 'h3'])
-                    title_text = title.get_text(strip=True) if title else "无标题"
-
                     # 获取章节内容
                     content = soup.get_text(separator='\n', strip=True)
+
+                    # 获取章节的第二行和第三行
+                    second_line = get_line(content, 1)  # 获取第二行
+                    third_line = get_line(content, 2)   # 获取第三行
                     
-                    # 获取章节内容的第二行
-                    second_line = get_second_line(content)
+                    # 合并第二行和第三行作为标题
+                    merged_title = f"{second_line} {third_line}".strip()
                     
-                    # 清理第二行文本
-                    sanitized_second_line = sanitize_text(second_line)
+                    # 清理合并后的文本
+                    sanitized_title = sanitize_text(merged_title)
                     
-                    # 限制内容长度，截取部分内容
+                    # 限制标题长度，截取部分内容
                     max_length = 100  # 设置最大长度
-                    if len(sanitized_second_line) > max_length:
-                        sanitized_second_line = sanitized_second_line[:max_length] + '...'  # 添加省略号
+                    if len(sanitized_title) > max_length:
+                        sanitized_title = sanitized_title[:max_length] + '...'  # 添加省略号
                     
                     # 输出拆分内容
-                    print(sanitized_second_line)
-
+                    print(sanitized_title)
+                    
                     # 准备写入 Markdown 文件
-                    md_file_name = sanitize_text(sanitized_second_line) + '.md'  # 使用标题作为文件名
+                    md_file_name = f"{sanitized_title}.md"  # 使用合并后的标题作为文件名
                     md_file_path = os.path.join(output_dir, md_file_name)
 
                     # 优化内容（替换 ; 和 ； 为 .）
@@ -65,15 +65,15 @@ def parse_epub(file_path, output_dir):
                     
                     # 写入文件
                     with open(md_file_path, 'w', encoding='utf-8') as md_file:
-                        md_file.write(f"# {sanitized_second_line}\n\n")
-                        md_file.write(optimized_content)  # 写入保留换行的内容
+                        md_file.write(f"# {sanitized_title}\n\n")  # 写入标题
+                        md_file.write(optimized_content)  # 写入文章内容
                         
-                    print(f"章节 '{sanitized_second_line}' 内容已写入文件: {md_file_path}\n")
-                    print(f"章节 '{sanitized_second_line}' 内容:\n{optimized_content}\n")
+                    print(f"章节 '{sanitized_title}' 内容已写入文件: {md_file_path}\n")
+                    print(f"章节内容:\n{optimized_content}\n")
                     print("=" * 80)  # 分隔符
 
 # 示例使用
-epub_file_path = '宪在：生活中的宪法踪迹.epub'   
+epub_file_path = '《秦晖著作集》（套装共6册）.epub'   
 output_directory = 'output_md_files'  # 指定输出目录
 os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
 parse_epub(epub_file_path, output_directory)

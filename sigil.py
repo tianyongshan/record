@@ -6,7 +6,7 @@ import re
 
 # 设置文件夹路径
 folder_path = os.path.join(os.getcwd(), '大家谈')  
-print('文件夹',folder_path)
+print('文件夹', folder_path)
 
 # 确保文件夹存在，如果不存在就创建
 os.makedirs(folder_path, exist_ok=True)
@@ -23,20 +23,23 @@ def sanitize_filename(title):
     # 用下划线替换特殊字符和所有空白字符
     title = re.sub(r'[<>:"/\\|?*]', '_', title)   
     title = re.sub(r'\s+', '_', title)  
-    print('清理后的文件名',title.strip('_'))
+    print('清理后的文件名', title.strip('_'))
     return title.strip('_') 
 
 def truncate_filename(title, max_length=160):
     # 限制文件名长度，确保标题加扩展名不超过 max_length
     if len(title) > max_length:
         title = title[:max_length]   
-    print('截取后的标题',title)
+    print('截取后的标题', title)
     return title
 
+def optimize_content(content):
+    # 替换 ; 和 ； 为 .
+    content = content.replace(';', '.').replace('；', '.')
+    return content
 
 # 每页20 
 # 点击19次
-
 for i in range(1800):
     # 计算当前 y 坐标
     y = start_y + (i % 18) * 23   
@@ -67,7 +70,7 @@ for i in range(1800):
     
     print(f"这是文章的标题: {truncated_title}")
 
-    # 每循环 6 次后点击一次坐标 (1063, 853)
+    # 每循环 18 次后点击一次坐标 (1063, 853)
     if (i + 1) % 18 == 0:
         for _ in range(5):
             pyautogui.click(1063, 853)
@@ -84,6 +87,9 @@ for i in range(1800):
     copied_content = pyperclip.paste()
     print(f"这是文章的内容: {copied_content}")
 
+    # 优化内容（替换 ; 和 ； 为 .）
+    optimized_content = optimize_content(copied_content)
+
     # 写入内容到 md 文件
     md_file_name = f"{truncated_title}.md"  # 使用处理后的标题作为文件名
     md_file_path = os.path.join(folder_path, md_file_name)  # 拼接生成文件完整路径
@@ -92,7 +98,7 @@ for i in range(1800):
         try:
             with open(md_file_path, 'w', encoding='utf-8') as f:
                 f.write(f"# {truncated_title}\n\n")  # 文件内容为标题，前面加 #
-                f.write(copied_content)  # 然后写入文章内容
+                f.write(optimized_content)  # 然后写入文章内容
             print(f"文章已写入文件: {md_file_path}")
         except OSError as e:
             print(f"写入文件时发生错误: {e}")

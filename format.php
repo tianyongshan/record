@@ -2,7 +2,6 @@
 
 /**
 
- format md file
 
  */
 function processMarkdownFiles($directory) {

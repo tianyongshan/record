@@ -74,7 +74,7 @@ def parse_epub(file_path, output_dir):
                     print("=" * 80)  # 分隔符
 
 # 示例使用
-epub_file_path = '《陋规：明清的腐败与反腐败》张宏杰.epub'   
+epub_file_path = '《王小波作品大全集（套装15册）》.epub'   
 output_directory = 'output_md_files'  # 指定输出目录
 os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
 parse_epub(epub_file_path, output_directory)

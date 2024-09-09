@@ -73,7 +73,7 @@ def parse_epub(file_path, output_dir):
                     print("=" * 80)  # 分隔符
 
 # 示例使用
-epub_file_path = '《秦晖著作集》（套装共6册）.epub'   
+epub_file_path = '宪在：生活中的宪法踪迹.epub'   
 output_directory = 'output_md_files'  # 指定输出目录
 os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
 parse_epub(epub_file_path, output_directory)

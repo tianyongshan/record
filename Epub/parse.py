@@ -19,7 +19,7 @@ def optimize_content(content):
     content = content.replace(';', '.').replace('；', '.')
     return content
 
-def parse_epub(file_path, output_dir):
+def parse_epub(file_path):
     # 确保文件存在
     if not os.path.exists(file_path):
         print("文件不存在:", file_path)
@@ -27,6 +27,13 @@ def parse_epub(file_path, output_dir):
 
     # 使用 zipfile 打开 EPUB 文件
     with zipfile.ZipFile(file_path, 'r') as ebook:
+        # 获取输出子目录名称为EPUB文件名（去掉扩展名）
+        epub_file_name = os.path.splitext(os.path.basename(file_path))[0]
+        output_subdir = os.path.join('.', epub_file_name)  # 直接放在当前目录下
+        
+        # 创建子目录（如果不存在）
+        os.makedirs(output_subdir, exist_ok=True)
+
         # 遍历每个文件
         for item in ebook.namelist():
             # 找到 XHTML 文件
@@ -52,40 +59,39 @@ def parse_epub(file_path, output_dir):
                     max_length = 30  # 设置最大长度
                     if len(sanitized_title) > max_length:
                         sanitized_title = sanitized_title[:max_length] + '...'  # 添加省略号
-                    
-                    # 输出拆分内容
-                    print(sanitized_title)
-                    
+
                     # 准备写入 Markdown 文件
                     md_file_name = f"{sanitized_title}.md"  # 使用合并后的标题作为文件名
-                    md_file_path = os.path.join(output_dir, md_file_name)
+                    
+                    # 处理文件名中的特殊字符
+                    md_file_name = sanitize_text(md_file_name)
 
+                    # 注意：这里确保文档路径在output_subdir子路径
+                    md_file_path = os.path.join(output_subdir, md_file_name)
+                    sanitized_md_file_path = md_file_path 
+                    
                     # 优化内容（替换 ; 和 ； 为 .）
                     optimized_content = optimize_content(content)
 
                     # 写入文件，同时保留换行
-                    with open(md_file_path, 'w', encoding='utf-8') as md_file:
+                    with open(sanitized_md_file_path, 'w', encoding='utf-8') as md_file:
                         md_file.write(f"# {sanitized_title}\n\n")  # 写入标题
                         # 将内容中多余的换行符和连续空行处理为 Markdown 的换行
                         md_file.write(optimized_content.replace('\n', '\n\n'))  # 保留换行
                         
-                    print(f"章节 '{sanitized_title}' 内容已写入文件: {md_file_path}\n")
+                    print(f"章节 '{sanitized_title}' 内容已写入文件: {sanitized_md_file_path}\n")
                     print(f"章节内容:\n{optimized_content}\n")
                     print("=" * 80)  # 分隔符
 
-def find_epub_file():
-    # 查找当前目录下第一个 EPUB 文件
-    for file in os.listdir('.'):
-        if file.endswith('.epub'):
-            return file
-    return None
+def find_all_epub_files():
+    # 查找当前目录下的所有 EPUB 文件
+    return [file for file in os.listdir('.') if file.endswith('.epub')]
 
-# 自定寻找 EPUB 文件
-epub_file_path = find_epub_file()
-if epub_file_path is None:
+# 自定寻找所有 EPUB 文件
+epub_files = find_all_epub_files()
+if not epub_files:
     print("在当前文件夹中未找到任何 EPUB 文件。")
 else:
-    print(f"找到 EPUB 文件: {epub_file_path}")
-    output_directory = 'output_md_files'  # 指定输出目录
-    os.makedirs(output_directory, exist_ok=True)  # 创建输出目录（如果不存在）
-    parse_epub(epub_file_path, output_directory)
+    for epub_file_path in epub_files:
+        print(f"找到 EPUB 文件: {epub_file_path}")
+        parse_epub(epub_file_path)

@@ -4,7 +4,6 @@
 # Step3:上边的命令 直接会打开浏览器  不需要关闭这个浏览器  直接执行脚本 
 
 
-
 import os
 import time
 import json
@@ -38,7 +37,7 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 all_articles_info = []
 
 # 遍历前十页
-for page in range(1, 11):
+for page in range(1, 3):
     url = f'https://chinadigitaltimes.net/chinese/more-stories/page/{page}'
     local_driver.get(url)
     time.sleep(10)
@@ -72,7 +71,7 @@ for page in range(1, 11):
 
 # 按日期分类保存文章
 for article in all_articles_info:
-    date_folder = os.path.join('中国数字时代_文章集', article['date'])
+    date_folder = os.path.join('中国数字时代_文章集', article['date'][:6])
     os.makedirs(date_folder, exist_ok=True)
 
     valid_filename = re.sub(r'[\\/*?:"<>|]', "", article['title'])
@@ -113,3 +112,4 @@ for article in all_articles_info:
 
 # 关闭WebDriver
 local_driver.quit()
+

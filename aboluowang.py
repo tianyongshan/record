@@ -32,8 +32,8 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 all_articles_info = []
 
 # 分页  
-for page in range(1, 3):
-    url = f'https://www.aboluowang.com/gsearch/?q=%E9%92%B1%E7%90%86%E7%BE%A4#gsc.tab=0&gsc.q=%E9%92%B1%E7%90%86%E7%BE%A4&gsc.page={page}'
+for page in range(1, 5):
+    url = f'https://www.aboluowang.com/gsearch/?q=易中天#gsc.tab=0&gsc.q=易中天&gsc.page={page}'
     print(url)
     local_driver.get(url)
     time.sleep(10)

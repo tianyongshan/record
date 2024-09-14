@@ -31,8 +31,9 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 
 all_articles_info = []
 
-for page in range(1, 11):
-    url = f'https://www.aboluowang.com/gsearch/?q=%E5%BC%A0%E5%8D%83%E5%B8%86#gsc.tab=0&gsc.q=%E5%BC%A0%E5%8D%83%E5%B8%86&gsc.page={page}'
+# 分页  
+for page in range(1, 3):
+    url = f'https://www.aboluowang.com/gsearch/?q=%E9%92%B1%E7%90%86%E7%BE%A4#gsc.tab=0&gsc.q=%E9%92%B1%E7%90%86%E7%BE%A4&gsc.page={page}'
     print(url)
     local_driver.get(url)
     time.sleep(10)
@@ -75,9 +76,11 @@ for article in all_articles_info:
         try:
             content_element = local_driver.find_element(By.ID, "main-left")
             content = content_element.text.replace('\n', '\n\n')
+            # ;是特殊符号 
             content = content.replace(';', '.').replace('；', '.')
 
             md_content = f"# {article['title']}\n\n{content}"
+            print('文章内容')
             print(md_content)
 
             with open(md_file_path, 'w', encoding='utf-8') as md_file:

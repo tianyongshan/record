@@ -36,9 +36,9 @@ local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=opti
 all_articles_info = []
 
 # 遍历9页
-for page in range(1, 8):
+for page in range(1, 3):
     # url = f'https://cmcn.org/page/{page}/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9'
-    url = f'https://cmcn.org/page/{page}/?s=笑蜀'
+    url = f'https://cmcn.org/page/{page}/?s=张鸣'
     print(url)
     local_driver.get(url)
     time.sleep(10)

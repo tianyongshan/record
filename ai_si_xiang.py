@@ -73,7 +73,7 @@ options.add_experimental_option("debuggerAddress",  "127.0.0.1:9039")
 local_driver = webdriver.Chrome(executable_path=chrome_driver_path, options=options)
  
 # 第一步：浏览器打开该地址
-url = 'https://www.aisixiang.com/thinktank/wangxuetai.html'
+url = 'https://www.aisixiang.com/thinktank/zhangming.html'
 local_driver.get(url)
 
 time.sleep(10)  

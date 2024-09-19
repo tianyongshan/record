@@ -93,7 +93,7 @@ def open_website(name, url, port):
                 
                 local_driver.get(link_href)
                 print('Opened link', link_href)
-                time.sleep(10)
+                time.sleep(15)
 
                 try:
                     show_text_elements = local_driver.find_elements(By.CLASS_NAME, 'show_text')
@@ -125,10 +125,10 @@ def open_website(name, url, port):
     print(f"Incremented port number to: {port}")
 
 task_dict = {
-    "张五常": "https://www.aisixiang.com/thinktank/zhangwuchang.html",
-    "林达2": "https://www.aisixiang.com/data/search?searchfield=author&keywords=%e6%9e%97%e8%be%be&page=2",
-    "林达3": "https://www.aisixiang.com/data/search?searchfield=author&keywords=%e6%9e%97%e8%be%be&page=3",
-    "林达4": "https://www.aisixiang.com/data/search?searchfield=author&keywords=%e6%9e%97%e8%be%be&page=4"
+    "孙立平": "https://www.aisixiang.com/thinktank/sunliping.html",
+    "李银河": "https://www.aisixiang.com/thinktank/liyinhe.html",
+    "张思之": "https://www.aisixiang.com/thinktank/zhangsizhi.html"
+    
 }
 
 port_start = 9222

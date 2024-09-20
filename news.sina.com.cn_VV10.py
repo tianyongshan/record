@@ -23,25 +23,22 @@ def create_driver(port):
 
 def scrape_article(driver, link_href, link_text):
     print('文章详情链接', link_href)
+    
+    valid_filename = re.sub(r'[\\/*?:"<>|]', "", link_text).strip()
+    print('MD文件名', valid_filename)
+    
+    md_file_path = f"articles/{valid_filename}.md"
+    os.makedirs(os.path.dirname(md_file_path), exist_ok=True)
+
     driver.get(link_href)
     time.sleep(8)
 
     print('文章标题', link_text)
 
-    valid_filename = re.sub(r'[\\/*?:"<>|]', "", link_text).strip()
-    print('MD文件名', valid_filename)
-
-    md_file_path = f"articles/{valid_filename}.md"
-    os.makedirs(os.path.dirname(md_file_path), exist_ok=True)
-    if os.path.exists(md_file_path) and os.path.getsize(md_file_path) > 0:
-        print(f"{md_file_path} 文件已存在 : {link_text}")
-        return
-
     full_content = ""
 
     while True:
         try:
-            # 获取当前页面的文章内容
             if driver.find_elements(By.CLASS_NAME, "blkContainerSblk"):
                 article_content = driver.find_element(By.CLASS_NAME, "blkContainerSblk").text
                 full_content += article_content + "\n\n"
@@ -58,14 +55,12 @@ def scrape_article(driver, link_href, link_text):
             print('找不到文本内容 blkContainerSblk', link_text)
             return False
 
-        # 检查是否有下一页
         try:
             next_page = driver.find_element(By.XPATH, "//a[contains(text(), '下一页')]")
             print('下一页',next_page)
             next_page.click()
-            time.sleep(5)  # 等待新页面加载
+            time.sleep(5)
         except:
-            # 如果找不到下一页按钮，说明已经是最后一页
             print('没找到 下一页')
             break
 
@@ -85,9 +80,17 @@ def main():
     with open('news_links.json', 'r', encoding='utf-8') as f:
         all_links = json.load(f)
 
+    # Filter out existing files
+    links_to_scrape = {}
+    for link_text, link_href in all_links.items():
+        valid_filename = re.sub(r'[\\/*?:"<>|]', "", link_text).strip()
+        md_file_path = f"articles/{valid_filename}.md"
+        if not os.path.exists(md_file_path) or os.path.getsize(md_file_path) == 0:
+            links_to_scrape[link_text] = link_href
+
     ports = range(9040, 9060)
-    chunk_size = len(all_links) // len(ports)
-    link_chunks = [dict(list(all_links.items())[i:i + chunk_size]) for i in range(0, len(all_links), chunk_size)]
+    chunk_size = len(links_to_scrape) // len(ports)
+    link_chunks = [dict(list(links_to_scrape.items())[i:i + chunk_size]) for i in range(0, len(links_to_scrape), chunk_size)]
 
     with ThreadPoolExecutor(max_workers=len(ports)) as executor:
         futures = []

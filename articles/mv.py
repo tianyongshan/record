@@ -25,7 +25,7 @@ keywords = [
     '赵汀阳','何兵','任剑涛','马国川','傅高义','季羡林','基辛格','李光耀','黄钟','李昌平',
     '丁学良','樊纲','俞可平','张维为','温铁军','贺雪峰','李强','李泽厚','连岳','林毅夫',
     '熊秉明','薛涌','陈嘉映','邓晓芒','哈耶克','加缪','金观涛','鲁迅','汉娜·阿伦特','梁漱溟',
-    '林毓生','高全喜','汤因比'
+    '林毓生','高全喜','汤因比','杜润生','连岳'
 ]
 
 for keyword in keywords:
@@ -34,7 +34,7 @@ for keyword in keywords:
 
 for filename in os.listdir(source_folder):
     if filename.lower().endswith('.md'):
-        # print(f"Processing file: {filename}")
+        
         for keyword in keywords:
             if keyword in filename:
                 print(f"Keyword '{keyword}' found in filename")

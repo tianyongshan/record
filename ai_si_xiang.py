@@ -57,7 +57,8 @@ def scroll_down(driver, scrolls):
     for _ in range(scrolls):
         # 向下滚动页面
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(1)  # 每次滚动后等待一秒
+        # 每次滚动后等待一秒
+        time.sleep(1) 
 
 
 ################################# [浏览器 准备工作 S]  ########################################  

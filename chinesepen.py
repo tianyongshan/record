@@ -98,13 +98,10 @@ def click_load_more(local_driver):
     except:
         return False
 
-#https://yibaochina.com/?s=%E8%B5%84%E4%B8%AD%E7%AD%A0&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes
-# base_url = 'https://yibaochina.com/?s=%E8%B4%BA%E5%8D%AB%E6%96%B9&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes'
 base_url = 'https://www.chinesepen.org/old-posts/?s=%E9%98%8E%E8%BF%9E%E7%A7%91'
 
 all_links = {}
 
-# for page in range(1, 14):  # 从1到13页
 for page in range(1, 4):   
     url = f"{base_url}&paged={page}"
     local_driver.get(url)

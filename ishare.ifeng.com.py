@@ -104,7 +104,7 @@ def scrape_task(port, keyword):
     driver.quit()
 
 def main():
-    keywords = ["秦晖", "吴思", "钱理群", "梁文道", "陈丹青", "张鸣", "贺卫方", "张千帆"]
+    keywords = ["劳东燕", "丛日云", "于建嵘", "孙立平", "张宏杰", "李承鹏", "江平", "张思之"]
     ports = range(9050, 9058)  
 
     with ThreadPoolExecutor(max_workers=len(ports)) as executor:
